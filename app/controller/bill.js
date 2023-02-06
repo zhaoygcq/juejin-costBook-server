@@ -14,12 +14,13 @@ class BillController extends Controller {
                 msg: '参数错误',
                 data: null
             }
+            return;
         }
         try {
             let user_id
             const token = ctx.request.header.authorization;
             // 拿到 token 获取用户信息
-            const decode = await app.jwt.verify(token, app.config.jwt.secret);
+            const decode = app.jwt.verify(token, app.config.jwt.secret);
             if (!decode) return
             user_id = decode.id
             // user_id 默认添加到每个账单项，作为后续获取指定用户账单的标示。
@@ -100,9 +101,9 @@ class BillController extends Controller {
 
             // 计算当月总收入和支出
             // 首先获取当月所有账单列表
-            let __list = list.filter(item => moment(Number(item.date)).format('YYYY-MM') == date)
+            // let __list = list.filter(item => moment(Number(item.date)).format('YYYY-MM') == date)
             // 累加计算支出
-            let totalExpense = __list.reduce((curr, item) => {
+            let totalExpense = _list.reduce((curr, item) => {
                 if (item.pay_type == 1) {
                     curr += Number(item.amount)
                     return curr
@@ -110,7 +111,7 @@ class BillController extends Controller {
                 return curr
             }, 0)
             // 累加计算收入
-            let totalIncome = __list.reduce((curr, item) => {
+            let totalIncome = _list.reduce((curr, item) => {
                 if (item.pay_type == 2) {
                     curr += Number(item.amount)
                     return curr
