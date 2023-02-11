@@ -287,6 +287,7 @@ class BillController extends Controller {
                 const index = arr.findIndex(item => item.type_id == cur.type_id)
                 if (index == -1) {
                     arr.push({
+                        id: cur.id,
                         type_id: cur.type_id,
                         type_name: cur.type_name,
                         pay_type: cur.pay_type,
